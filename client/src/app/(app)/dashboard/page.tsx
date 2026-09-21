@@ -1,7 +1,7 @@
 "use client"
 
 import { useQuery } from '@tanstack/react-query'
-import { Plus, Settings2, FileText, Briefcase, FileUp } from 'lucide-react'
+import { Plus, Settings2, FileText, Briefcase, FileUp, Github } from 'lucide-react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { ScreenState } from '@/components/ScreenState'
@@ -37,6 +37,18 @@ export default function Dashboard() {
         eyebrow="Workspace"
         title="Dashboard"
         description="Your unified career evidence and tailored resumes."
+        action={
+          <a
+            aria-label="View MakeMyResume on GitHub"
+            className="button-secondary !px-3"
+            href="https://github.com/n1dhruv/MakeMyResume"
+            rel="noreferrer"
+            target="_blank"
+            title="View on GitHub"
+          >
+            <Github size={20} aria-hidden="true" />
+          </a>
+        }
       />
 
       <Reveal variant="up" className="mb-12">
