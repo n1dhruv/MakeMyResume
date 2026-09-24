@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face { font-family: 'Newsreader'; src: local('Georgia'), local('DejaVu Serif'), serif; }
+@font-face { font-family: 'Instrument Sans'; src: local('DejaVu Sans'), local('Arial'), sans-serif; }
+@font-face { font-family: 'IBM Plex Mono'; src: local('DejaVu Sans Mono'), local('Courier New'), monospace; }
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { margin:0; width:1920px; height:1080px; overflow:hidden; background:#0d0c0b; }
+#root {
+  width:1920px; height:1080px; position:relative; background:#0d0c0b; overflow:hidden;
+  font-family:'Instrument Sans', ui-sans-serif, system-ui, sans-serif; color:#f4f2ee;
+}
+.clip { position:absolute; top:0; left:0; width:1920px; height:1080px; }
+.serif { font-family:'Newsreader', Georgia, serif; }
+.mono { font-family:'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+
+/* Global Brand Elements */
+.glow-accent {
+  position:absolute; width:680px; height:680px;
+  background:radial-gradient(circle, rgba(224, 98, 72, 0.22) 0%, rgba(224, 98, 72, 0) 70%);
+  pointer-events:none;
+}
+.brand-r {
+  width:64px; height:64px; border:2px solid #e06248; background:#181715; color:#f4f2ee;
+  display:flex; align-items:center; justify-content:center; font-family:'Newsreader', Georgia, serif;
+  font-size:38px; font-weight:700; border-radius:6px; box-shadow:0 0 24px rgba(224, 98, 72, 0.25);
+}
+.eyebrow {
+  font-family:'IBM Plex Mono', monospace; font-size:18px; letter-spacing:0.24em;
+  text-transform:uppercase; color:#e06248; font-weight:600;
+}
+.pill {
+  display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border-radius:9999px;
+  background:#1f1d1a; border:1px solid #3d3932; font-size:15px; color:#f4f2ee;
+}
+.pill-accent {
+  background:rgba(224,98,72,0.15); border-color:#e06248; color:#fca5a5;
+}
+.pill-success {
+  background:rgba(34,197,94,0.14); border-color:#22c55e; color:#4ade80;
+}
+.pill-warning {
+  background:rgba(234,179,8,0.14); border-color:#eab308; color:#fef08a;
+}
+
+/* Scene 1: Skill Bank */
+.s1-header { display:flex; align-items:center; gap:18px; }
+.s1-logo-text { font-size:36px; font-weight:600; letter-spacing:-0.02em; color:#f4f2ee; }
+.s1-hero { font-size:78px; line-height:1.12; font-weight:500; color:#f4f2ee; max-width:1150px; text-align:center; }
+.s1-hero em { color:#e06248; font-style:italic; }
+.s1-cards { display:flex; gap:32px; width:1320px; margin-top:40px; }
+.card {
+  flex:1; background:#181715; border:1px solid #36332d; border-radius:14px; padding:28px 32px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.card-header { display:flex; justify-content:space-between; align-items:flex-start; }
+.card-type { font-size:13px; letter-spacing:0.18em; text-transform:uppercase; color:#d4d0c7; font-weight:600; }
+.card-org { font-size:15px; color:#e06248; font-weight:500; margin-top:2px; }
+.card-metric {
+  background:#26231f; border:1px solid #4a453d; padding:4px 12px; border-radius:6px;
+  font-size:14px; color:#4ade80; font-family:'IBM Plex Mono', monospace; font-weight:600;
+}
+.card-title { font-size:24px; font-weight:600; color:#f4f2ee; margin-top:14px; }
+.card-bullet { font-size:17px; color:#dedbd2; line-height:1.55; margin-top:10px; }
+.card-tags { display:flex; gap:8px; margin-top:18px; flex-wrap:wrap; }
+.card-tag {
+  background:#211f1c; border:1px solid #3d3932; padding:3px 10px; border-radius:4px;
+  font-size:13px; color:#dedbd2; font-family:'IBM Plex Mono', monospace;
+}
+
+/* Scene 2: Hybrid Search */
+.s2-pipeline {
+  display:flex; align-items:center; justify-content:center; gap:16px; margin-top:18px;
+  background:#141312; border:1px solid #36332d; padding:12px 24px; border-radius:8px;
+  font-family:'IBM Plex Mono', monospace; font-size:15px; color:#d4d0c7;
+}
+.s2-pipeline b { color:#e06248; }
+.s2-match-list { width:1340px; display:flex; flex-direction:column; gap:16px; margin-top:28px; }
+.s2-match-item {
+  background:#181715; border:1px solid #36332d; border-radius:10px; padding:18px 24px;
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+}
+.s2-match-score {
+  font-family:'IBM Plex Mono', monospace; font-size:15px; font-weight:700; color:#4ade80;
+  background:rgba(34,197,94,0.14); border:1px solid rgba(34,197,94,0.4); padding:6px 12px;
+  border-radius:6px; white-space:nowrap;
+}
+
+/* Scene 3: Fabrication Guardrails */
+.s3-grid { display:flex; gap:32px; width:1380px; margin-top:28px; }
+.s3-box {
+  flex:1; background:#181715; border:1px solid #36332d; border-radius:12px; padding:28px;
+}
+.s3-box-active { border-color:rgba(224,98,72,0.6); background:#1c1916; }
+.s3-box-title { font-size:14px; letter-spacing:0.16em; text-transform:uppercase; color:#d4d0c7; font-weight:600; margin-bottom:12px; }
+.s3-box-text { font-size:20px; line-height:1.55; color:#f4f2ee; }
+.s3-box-text mark { background:rgba(234,179,8,0.25); color:#fef08a; padding:1px 5px; border-radius:3px; }
+.s3-guardrails {
+  display:flex; justify-content:space-between; align-items:center; width:1380px; margin-top:24px;
+  background:#141312; border:1px solid #36332d; border-radius:10px; padding:16px 28px;
+}
+.s3-button {
+  background:#22c55e; color:#0d0c0b; font-weight:700; font-size:16px; padding:10px 24px;
+  border-radius:6px; border:none; display:flex; align-items:center; gap:8px; cursor:pointer;
+}
+
+/* Scene 4: In-Browser LaTeX + PDF & BYOK */
+.s4-container {
+  width:1420px; height:600px; background:#141312; border:1px solid #36332d; border-radius:12px;
+  display:flex; overflow:hidden; margin-top:24px; box-shadow:0 16px 48px rgba(0,0,0,0.5);
+}
+.s4-editor-pane {
+  flex:1.1; background:#0d0c0b; border-right:1px solid #36332d; padding:24px;
+  font-family:'IBM Plex Mono', monospace; font-size:15px; line-height:1.65; color:#dedbd2;
+  overflow:hidden;
+}
+.s4-pdf-pane {
+  flex:0.9; background:#ffffff; color:#18181b; padding:32px; font-family:'Newsreader', Georgia, serif;
+  overflow:hidden;
+}
+.tex-cmd { color:#fca5a5; font-weight:600; }
+.tex-param { color:#93c5fd; }
+.tex-comment { color:#a8a29e; font-style:italic; }
+
+/* Scene 5: Outro */
+.s5-center { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.s5-title { font-size:92px; font-weight:600; letter-spacing:-0.03em; color:#f4f2ee; margin-top:24px; }
+.s5-tagline { font-size:38px; color:#dedbd2; margin-top:16px; }
+.s5-tagline em { color:#e06248; font-style:normal; font-weight:600; }
+.s5-url-box {
+  margin-top:36px; padding:14px 44px; background:#181715; border:2px solid #e06248;
+  border-radius:100px; font-size:32px; font-weight:600; color:#f4f2ee;
+  letter-spacing:0.04em; box-shadow:0 0 32px rgba(224, 98, 72, 0.35);
+}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1920" data-height="1080">
+
+  <!-- ═══════════════════════════════════════════════════
+       SCENE 1: Foundation — Skill Bank (0.0s – 3.2s)
+       ═══════════════════════════════════════════════════ -->
+  <div id="s1" class="clip" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px;" data-start="0" data-duration="3.2" data-track-index="0">
+    <div id="s1-glow" class="glow-accent"></div>
+    <div class="s1-header" id="s1-brand">
+      <div class="brand-r">R</div>
+      <span class="s1-logo-text serif">MakeMyResume</span>
+    </div>
+    <div id="s1-eyebrow" class="eyebrow mono" style="margin-top:28px;">EVIDENCE-FIRST RESUME TAILORING</div>
+    <h1 id="s1-hero" class="s1-hero serif" style="margin-top:16px;">
+      Build from what you’ve done.<br/>
+      <em>Tailor for where you’re going.</em>
+    </h1>
+    <div class="s1-cards">
+      <div id="s1-c1" class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-type mono">Experience</div>
+            <div class="card-org">Northstar Labs &middot; Bengaluru</div>
+          </div>
+          <div class="card-metric">18 &rarr; 6 min</div>
+        </div>
+        <div class="card-title">Product Engineer</div>
+        <div class="card-bullet">Rebuilt the release workflow in React and TypeScript, cutting deployment setup time by 66%.</div>
+        <div class="card-tags">
+          <span class="card-tag">React</span>
+          <span class="card-tag">TypeScript</span>
+          <span class="card-tag">CI/CD</span>
+        </div>
+      </div>
+      <div id="s1-c2" class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-type mono">Open Source Project</div>
+            <div class="card-org">Papertrail</div>
+          </div>
+          <div class="card-metric">12,000 notes</div>
+        </div>
+        <div class="card-title">Papertrail Research Library</div>
+        <div class="card-bullet">Engineered conflict-safe sync and full-text search index across 12,000 notes with typed Python SDK.</div>
+        <div class="card-tags">
+          <span class="card-tag">Python</span>
+          <span class="card-tag">FastAPI</span>
+          <span class="card-tag">PostgreSQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCENE 2: The Input — JD & Hybrid Retrieval (3.2s – 7.2s)
+       ═══════════════════════════════════════════════════ -->
+  <div id="s2" class="clip" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px;" data-start="3.2" data-duration="4.0" data-track-index="1">
+    <div class="eyebrow mono" id="s2-step">STEP 02 &middot; HYBRID VECTOR SEARCH</div>
+    <h2 class="serif" id="s2-title" style="font-size:54px; margin-top:12px; font-weight:500;">
+      Paste a target job. Find the exact evidence.
+    </h2>
+    <div class="s2-pipeline mono" id="s2-pipe">
+      <span>Target: <b>Fathom &middot; Senior Product Engineer</b></span>
+      <span>&vert;</span>
+      <span>Pinecone 2048-d Dense (Nemotron) + Sparse BM25 + FlashRank Reranker</span>
+    </div>
+    <div class="s2-match-list">
+      <div id="s2-m1" class="s2-match-item">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="pill pill-accent mono">Requirement: React Architecture</span>
+          <span style="font-size:18px; color:#f4f2ee;">Owned cross-functional React/TypeScript release pipeline &middot; Northstar Labs</span>
+        </div>
+        <div class="s2-match-score">94% CONFIDENCE</div>
+      </div>
+      <div id="s2-m2" class="s2-match-item">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="pill pill-accent mono">Requirement: Data Pipelines</span>
+          <span style="font-size:18px; color:#f4f2ee;">Architected PostgreSQL audit-log pipeline processing 2.4M monthly events</span>
+        </div>
+        <div class="s2-match-score">91% CONFIDENCE</div>
+      </div>
+      <div id="s2-m3" class="s2-match-item">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="pill pill-accent mono">Requirement: Full-Text Search</span>
+          <span style="font-size:18px; color:#f4f2ee;">Built local-first document index with typed Python client adopted by 140+ devs</span>
+        </div>
+        <div class="s2-match-score">88% CONFIDENCE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCENE 3: The Guardrails — Tailored Rewrite (7.2s – 11.8s)
+       ═══════════════════════════════════════════════════ -->
+  <div id="s3" class="clip" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px;" data-start="7.2" data-duration="4.6" data-track-index="2">
+    <div class="eyebrow mono" id="s3-step">STEP 03 &middot; ANTI-FABRICATION GUARDRAILS</div>
+    <h2 class="serif" id="s3-title" style="font-size:52px; margin-top:10px; font-weight:500;">
+      No hallucinations. Human approval on every change.
+    </h2>
+    <div class="s3-grid">
+      <div id="s3-b1" class="s3-box">
+        <div class="s3-box-title mono">Original &mdash; Source Truth (Immutable)</div>
+        <div class="s3-box-text">
+          Rebuilt the release workflow in React and TypeScript, cutting median deployment setup from 18 minutes to 6 minutes.
+        </div>
+      </div>
+      <div id="s3-b2" class="s3-box s3-box-active">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div class="s3-box-title mono" style="color:#e06248; margin-bottom:0;">Proposed Rewrite (ATS-Optimized)</div>
+          <span id="s3-status-badge" class="pill pill-warning mono" style="font-size:13px;">Review Required</span>
+        </div>
+        <div class="s3-box-text">
+          <mark>Owned cross-functional</mark> React and TypeScript release workflow, reducing median deployment setup from <mark>18 to 6 minutes</mark>.
+        </div>
+      </div>
+    </div>
+    <div id="s3-guards" class="s3-guardrails mono">
+      <div style="display:flex; gap:24px; align-items:center;">
+        <span id="s3-g1" class="pill pill-success" style="font-size:14px;">&check; Numbers Verified (18 &rarr; 6m)</span>
+        <span id="s3-g2" class="pill pill-success" style="font-size:14px;">&check; Zero Invented Technologies</span>
+        <span id="s3-g3" class="pill pill-success" style="font-size:14px;">&check; ATS Keywords: cross-functional</span>
+      </div>
+      <div style="display:flex; gap:14px; align-items:center;">
+        <button id="s3-btn" class="s3-button mono">&check; Approve Rewrite</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCENE 4: Output — In-Browser LaTeX + PDF & BYOK (11.8s – 16.5s)
+       ═══════════════════════════════════════════════════ -->
+  <div id="s4" class="clip" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px;" data-start="11.8" data-duration="4.7" data-track-index="3">
+    <div style="display:flex; justify-content:space-between; align-items:center; width:1420px;">
+      <div class="eyebrow mono" id="s4-step">STEP 04 &middot; IN-BROWSER LATEX COMPILATION</div>
+      <div style="display:flex; gap:16px;">
+        <span id="s4-byok" class="pill pill-accent mono" style="font-size:13px;">BYOK: OpenAI &middot; Claude &middot; Gemini</span>
+        <span id="s4-mode" class="pill mono" style="font-size:13px; border-color:#e06248; color:#fca5a5;">Theme: Dark &bull; Light</span>
+        <span id="s4-badge" class="pill pill-success mono" style="font-size:13px;">&check; Compiled in 1.4s</span>
+      </div>
+    </div>
+    <h2 class="serif" id="s4-title" style="font-size:48px; margin-top:8px; font-weight:500; width:1420px;">
+      Real LaTeX. One-page precision. Light and dark modes.
+    </h2>
+    <div class="s4-container">
+      <div class="s4-editor-pane" id="s4-code">
+        <div><span class="tex-cmd">\documentclass</span>[10pt]{<span class="tex-param">article</span>}</div>
+        <div><span class="tex-cmd">\usepackage</span>[margin=0.65in]{<span class="tex-param">geometry</span>}</div>
+        <div><span class="tex-cmd">\begin</span>{<span class="tex-param">document</span>}</div>
+        <div style="margin-top:6px;"><span class="tex-cmd">\textbf</span>{<span style="color:#ffffff;">Dhruv Sharma</span>} &middot; Senior Product Engineer</div>
+        <div style="margin-top:10px;"><span class="tex-cmd">\section*</span>{Experience}</div>
+        <div><span class="tex-cmd">\textbf</span>{Product Engineer} \hfill 2023--Present</div>
+        <div><span class="tex-comment">\textit{Northstar Labs, Bengaluru}</span></div>
+        <div style="margin-top:6px;"><span class="tex-cmd">\begin</span>{<span class="tex-param">itemize</span>}[leftmargin=*]</div>
+        <div style="padding-left:16px; color:#4ade80;">  \item Owned cross-functional React and TypeScript release workflow...</div>
+        <div style="padding-left:16px;">  \item Architected PostgreSQL audit-log pipeline processing 2.4M events...</div>
+        <div><span class="tex-cmd">\end</span>{<span class="tex-param">itemize</span>}</div>
+        <div style="margin-top:10px;"><span class="tex-cmd">\end</span>{<span class="tex-param">document</span>}</div>
+      </div>
+      <div class="s4-pdf-pane" id="s4-pdf">
+        <div style="text-align:center; border-bottom:2px solid #222222; padding-bottom:12px;">
+          <h1 style="font-size:32px; font-weight:700; letter-spacing:0.02em; color:#18181b;">DHRUV SHARMA</h1>
+          <p style="font-size:15px; color:#4b5563; margin-top:4px; font-family:'Instrument Sans', sans-serif;">
+            Bengaluru, India &middot; dhruv@makemyresume.tech &middot; github.com/dhruv
+          </p>
+        </div>
+        <div style="margin-top:20px;">
+          <h2 style="font-size:18px; font-weight:700; border-bottom:1px solid #d1d5db; padding-bottom:4px; letter-spacing:0.06em; text-transform:uppercase; color:#18181b;">
+            Experience
+          </h2>
+          <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:16px; color:#18181b;">
+            <b>Product Engineer</b>
+            <span style="color:#4b5563;">2023 &ndash; Present</span>
+          </div>
+          <div style="font-size:15px; color:#374151; font-style:italic;">Northstar Labs, Bengaluru</div>
+          <ul style="margin-top:8px; padding-left:20px; font-size:14px; line-height:1.55; color:#1f2937; font-family:'Instrument Sans', sans-serif;">
+            <li style="color:#111827; font-weight:500;">Owned cross-functional React and TypeScript release workflow, reducing median deployment setup from 18 to 6 minutes.</li>
+            <li style="margin-top:4px; color:#1f2937;">Architected a PostgreSQL audit-log pipeline processing 2.4M monthly events with traceable retention controls.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCENE 5: Outro & Punchline (16.5s – 20.0s)
+       ═══════════════════════════════════════════════════ -->
+  <div id="s5" class="clip s5-center" data-start="16.5" data-duration="3.5" data-track-index="4">
+    <div id="s5-glow" class="glow-accent" style="width:720px; height:720px;"></div>
+    <div id="s5-logo" class="brand-r" style="width:84px; height:84px; font-size:52px; border-radius:10px;">R</div>
+    <h1 id="s5-title" class="s5-title serif">MakeMyResume</h1>
+    <div id="s5-tag" class="s5-tagline serif">
+      Your evidence. Your approval. <em>Your resume.</em>
+    </div>
+    <div id="s5-badges" class="mono" style="margin-top:20px; display:flex; gap:16px; font-size:15px; color:#dedbd2;">
+      <span>Skill Bank</span> &middot;
+      <span>Pinecone Hybrid Search</span> &middot;
+      <span>Fabrication Guardrails</span> &middot;
+      <span>In-Browser LaTeX</span>
+    </div>
+    <div id="s5-url" class="s5-url-box mono">
+      makemyresume.tech
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       Audio Track Allocation
+       ═══════════════════════════════════════════════════ -->
+  <audio id="bg-music" data-start="0" data-duration="20" data-track-index="10" data-volume="0.32" data-fade-out="1.5" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
+
+  <!-- SFX Cues (Non-overlapping tracks 11-18) -->
+  <audio id="sfx-s1-logo" data-start="0.15" data-duration="0.2" data-track-index="11" data-volume="0.65" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+  <audio id="sfx-s1-c1" data-start="1.35" data-duration="0.6" data-track-index="12" data-volume="0.70" src="assets/sfx/casino/card-slide-2.ogg"></audio>
+  <audio id="sfx-s1-c2" data-start="1.95" data-duration="0.7" data-track-index="13" data-volume="0.70" src="assets/sfx/casino/card-place-1.ogg"></audio>
+
+  <audio id="sfx-s2-search" data-start="3.4" data-duration="0.02" data-track-index="14" data-volume="0.70" src="assets/sfx/interface/click_002.ogg"></audio>
+  <audio id="sfx-s2-m1" data-start="5.1" data-duration="0.15" data-track-index="15" data-volume="0.65" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio id="sfx-s2-m2" data-start="5.7" data-duration="0.2" data-track-index="16" data-volume="0.65" src="assets/sfx/interface/drop_002.ogg"></audio>
+
+  <audio id="sfx-s3-guard" data-start="8.74" data-duration="0.15" data-track-index="11" data-volume="0.70" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio id="sfx-s3-approve" data-start="10.2" data-duration="0.09" data-track-index="12" data-volume="0.75" src="assets/sfx/ui/click1.ogg"></audio>
+
+  <audio id="sfx-s4-compile" data-start="12.0" data-duration="0.65" data-track-index="13" data-volume="0.70" src="assets/sfx/interface/switch_001.ogg"></audio>
+  <audio id="sfx-s4-toggle" data-start="14.0" data-duration="0.02" data-track-index="14" data-volume="0.65" src="assets/sfx/interface/click_002.ogg"></audio>
+
+  <audio id="sfx-s5-bell" data-start="16.7" data-duration="1.5" data-track-index="15" data-volume="0.75" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+
+</div>
+
+<script>
+(function(){
+  var tl = gsap.timeline({ paused: true });
+
+  // ═══════════════════════════════════════════════════
+  // SCENE 1: Foundation (0.0s – 3.2s)
+  // ═══════════════════════════════════════════════════
+  tl.fromTo("#s1-brand", {scale:0.7, opacity:0}, {scale:1, opacity:1, duration:0.45, ease:"back.out(1.5)"}, 0.15);
+  tl.fromTo("#s1-glow", {scale:0.6, opacity:0}, {scale:1.1, opacity:1, duration:1.4, ease:"power2.out"}, 0.15);
+  tl.fromTo("#s1-eyebrow", {opacity:0, y:14}, {opacity:1, y:0, duration:0.35}, 0.45);
+  tl.fromTo("#s1-hero", {opacity:0, y:22}, {opacity:1, y:0, duration:0.45}, 0.65);
+  // Sequential cards
+  tl.fromTo("#s1-c1", {opacity:0, y:40}, {opacity:1, y:0, duration:0.45, ease:"power2.out"}, 1.35);
+  tl.fromTo("#s1-c2", {opacity:0, y:40}, {opacity:1, y:0, duration:0.45, ease:"power2.out"}, 1.95);
+  // Transition out
+  tl.to("#s1", {opacity:0, duration:0.35}, 2.95);
+
+  // ═══════════════════════════════════════════════════
+  // SCENE 2: The Input — JD & Hybrid Search (3.2s – 7.2s)
+  // ═══════════════════════════════════════════════════
+  tl.fromTo("#s2-step", {opacity:0, y:12}, {opacity:1, y:0, duration:0.3}, 3.25);
+  tl.fromTo("#s2-title", {opacity:0, y:16}, {opacity:1, y:0, duration:0.4}, 3.4);
+  tl.fromTo("#s2-pipe", {opacity:0, scale:0.95}, {opacity:1, scale:1, duration:0.4}, 3.7);
+  // Sequential matches (beat-grid aligned)
+  tl.fromTo("#s2-m1", {opacity:0, x:-24}, {opacity:1, x:0, duration:0.4}, 5.1);
+  tl.fromTo("#s2-m2", {opacity:0, x:-24}, {opacity:1, x:0, duration:0.4}, 5.7);
+  tl.fromTo("#s2-m3", {opacity:0, x:-24}, {opacity:1, x:0, duration:0.4}, 6.3);
+  // Transition out
+  tl.to("#s2", {opacity:0, duration:0.35}, 6.95);
+
+  // ═══════════════════════════════════════════════════
+  // SCENE 3: The Guardrails — Tailored Rewrite (7.2s – 11.8s)
+  // ═══════════════════════════════════════════════════
+  tl.fromTo("#s3-step", {opacity:0, y:12}, {opacity:1, y:0, duration:0.3}, 7.25);
+  tl.fromTo("#s3-title", {opacity:0, y:16}, {opacity:1, y:0, duration:0.4}, 7.4);
+  tl.fromTo("#s3-b1", {opacity:0, y:28}, {opacity:1, y:0, duration:0.45}, 7.7);
+  tl.fromTo("#s3-b2", {opacity:0, y:28}, {opacity:1, y:0, duration:0.45}, 7.9);
+  // Guardrail pills pop in // beat-locked: 8.74s
+  tl.fromTo("#s3-guards", {opacity:0, y:16}, {opacity:1, y:0, duration:0.35}, 8.74);
+  // Simulated Approve button click & state change
+  tl.to("#s3-btn", {scale:0.92, duration:0.1, yoyo:true, repeat:1}, 10.2);
+  tl.to("#s3-status-badge", {
+    innerText:"Approved \u2713",
+    color:"#4ade80",
+    borderColor:"#22c55e",
+    backgroundColor:"rgba(34,197,94,0.18)",
+    duration:0.15
+  }, 10.3);
+  // Transition out
+  tl.to("#s3", {opacity:0, duration:0.35}, 11.55);
+
+  // ═══════════════════════════════════════════════════
+  // SCENE 4: In-Browser LaTeX + PDF & BYOK (11.8s – 16.5s)
+  // ═══════════════════════════════════════════════════
+  tl.fromTo("#s4-step", {opacity:0, y:12}, {opacity:1, y:0, duration:0.3}, 11.85);
+  tl.fromTo("#s4-title", {opacity:0, y:16}, {opacity:1, y:0, duration:0.4}, 12.0);
+  tl.fromTo("#s4-code", {opacity:0, x:-30}, {opacity:1, x:0, duration:0.5}, 12.2);
+  tl.fromTo("#s4-pdf", {opacity:0, x:30}, {opacity:1, x:0, duration:0.5}, 12.2);
+  tl.fromTo("#s4-badge", {scale:0.8, opacity:0}, {scale:1, opacity:1, duration:0.35, ease:"back.out(1.5)"}, 12.6);
+  tl.fromTo("#s4-byok", {scale:0.8, opacity:0}, {scale:1, opacity:1, duration:0.35, ease:"back.out(1.5)"}, 12.8);
+  tl.fromTo("#s4-mode", {scale:0.8, opacity:0}, {scale:1, opacity:1, duration:0.35, ease:"back.out(1.5)"}, 13.0);
+  // Pulse mode pill at 14.0s
+  tl.to("#s4-mode", {scale:1.1, backgroundColor:"rgba(224,98,72,0.3)", duration:0.25, yoyo:true, repeat:1}, 14.0);
+  // Transition out
+  tl.to("#s4", {opacity:0, duration:0.35}, 16.25);
+
+  // ═══════════════════════════════════════════════════
+  // SCENE 5: Outro & Punchline (16.5s – 20.0s)
+  // ═══════════════════════════════════════════════════
+  tl.fromTo("#s5-logo", {scale:0.6, opacity:0}, {scale:1, opacity:1, duration:0.5, ease:"back.out(1.6)"}, 16.6);
+  tl.fromTo("#s5-glow", {scale:0.7, opacity:0}, {scale:1.2, opacity:1, duration:1.5}, 16.6);
+  tl.fromTo("#s5-title", {opacity:0, y:20}, {opacity:1, y:0, duration:0.45}, 16.9);
+  tl.fromTo("#s5-tag", {opacity:0, y:16}, {opacity:1, y:0, duration:0.45}, 17.3);
+  tl.fromTo("#s5-badges", {opacity:0}, {opacity:1, duration:0.4}, 17.7);
+  // URL CTA box // beat-locked near 18.02s
+  tl.fromTo("#s5-url", {scale:0.88, opacity:0, y:16}, {scale:1, opacity:1, y:0, duration:0.45, ease:"back.out(1.5)"}, 18.02);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = tl;
+  tl.seek(0);
+})();
+</script>
+</body>
+</html>

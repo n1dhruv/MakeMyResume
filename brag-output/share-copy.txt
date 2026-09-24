@@ -1,0 +1,3 @@
+Stop letting AI hallucinate your resume. MakeMyResume indexes your real career proof points, uses hybrid vector search to match target job descriptions, enforces strict fabrication guardrails, and compiles single-page LaTeX PDFs in-browser with full BYOK privacy.
+
+Build from what you've done: makemyresume.tech
